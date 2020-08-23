@@ -1,17 +1,17 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:hello_world/my-home-page/my-home-page.dart';
+import 'package:hello_world/home-page/home-page.dart';
 
-class MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class HomePageState extends State<HomePage> {
+  List<Text> _pushedButton = [];
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _pushedButton.add(
+        Text(
+          new DateTime.now().toIso8601String(),
+        ),
+      );
     });
   }
 
@@ -47,14 +47,35 @@ class MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'You have clicked the button this many times:',
+            Container(
+              alignment: Alignment.center,
+              color: Colors.black,
+              child: RichText(
+                text: TextSpan(
+                  text: 'HELLO WORLD',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
+                ),
+              ),
+              height: 100,
+              margin: const EdgeInsets.all(25),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'You have clicked the button this times:',
+                  ),
+                  ..._pushedButton,
+                ],
+              ),
             ),
           ],
         ),
