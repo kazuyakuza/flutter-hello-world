@@ -3,16 +3,66 @@ import 'package:flutter/material.dart';
 import 'package:hello_world/home-page/home-page.dart';
 
 class HomePageState extends State<HomePage> {
-  List<Text> _pushedButton = [];
+  List<String> _timestamps = [];
 
   void _incrementCounter() {
     setState(() {
-      _pushedButton.add(
-        Text(
-          new DateTime.now().toIso8601String(),
-        ),
-      );
+      _timestamps.insert(0, new DateTime.now().toIso8601String());
     });
+  }
+
+  _helloWorldText() {
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.black,
+      child: RichText(
+        text: TextSpan(
+          text: 'HELLO WORLD',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 30,
+          ),
+        ),
+      ),
+      height: 100,
+      margin: const EdgeInsets.all(25),
+    );
+  }
+
+  _timestampsView() {
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              int module = index % 10 + 1;
+              int bkgColor = 0 + (module * 10);
+              int txtColor = 255 - (module * 10);
+              return Container(
+                alignment: Alignment.center,
+                color: Color.fromRGBO(bkgColor, bkgColor, bkgColor, 1),
+                child: RichText(
+                  text: TextSpan(
+                    text: (index == 0
+                            ? '>> '
+                            : ((_timestamps.length - index).toString() +
+                                ': ')) +
+                        _timestamps[index] +
+                        (index == 0 ? ' <<' : ''),
+                    style: TextStyle(
+                      color: Color.fromRGBO(txtColor, txtColor, txtColor, 1),
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              );
+            },
+            childCount: _timestamps.length,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -29,6 +79,7 @@ class HomePageState extends State<HomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
+      backgroundColor: Colors.grey,
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -49,41 +100,24 @@ class HomePageState extends State<HomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              color: Colors.black,
-              child: RichText(
-                text: TextSpan(
-                  text: 'HELLO WORLD',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                ),
-              ),
-              height: 100,
-              margin: const EdgeInsets.all(25),
-            ),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    'You have clicked the button this times:',
-                  ),
-                  ..._pushedButton,
-                ],
+            _helloWorldText(),
+            Text(
+              'Time Marks:',
+              style: TextStyle(
+                fontSize: 24,
               ),
             ),
+            Expanded(
+              child: _timestampsView(),
+            )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        tooltip: 'Current Date',
+        child: Icon(Icons.timer),
+        backgroundColor: Colors.red,
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
